@@ -21,6 +21,16 @@ const videos = [
     title: "Straight to it",
     label: "Cjones",
   },
+  {
+    id: "jgPfwaFTOiU",
+    title: "Forever Grateful 2.5- [Full Tape Mix]",
+    label: "Cjones",
+  },
+  {
+    id: "j0_B8IAV8Xk&list=RDj0_B8IAV8Xk&index=1",
+    title: "Letter 2 Bro",
+    label: "Cjones",
+  },
 ];
 // ────────────────────────────────────────────────────────────────────────────
 
