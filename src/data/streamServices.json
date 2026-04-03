@@ -1,0 +1,25 @@
+{
+  "streamServices": [
+    {
+      "id": 1,
+      "title": "Play With Ced",
+      "description": "Join Ced live in a gaming session. Get featured on stream, interact with the community, and have a real one-on-one experience.",
+      "price": "$25",
+      "icon": "🎮"
+    },
+    {
+      "id": 2,
+      "title": "Request a Stream",
+      "description": "Pick the game, pick the time. Ced will go live on request and shout you out as the sponsor of the session.",
+      "price": "$15",
+      "icon": "📺"
+    },
+    {
+      "id": 3,
+      "title": "Stream Collab",
+      "description": "Full collaboration stream for artists, brands, or creators. Co-stream with HB Stream to tap into an engaged gaming audience.",
+      "price": "Contact for pricing",
+      "icon": "🔴"
+    }
+  ]
+}

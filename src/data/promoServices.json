@@ -1,0 +1,25 @@
+{
+  "promoServices": [
+    {
+      "id": 1,
+      "title": "Music Promotion",
+      "description": "Multi-platform push across Twitter, Instagram, TikTok, and YouTube. Organic reach strategy with daily posts and story mentions.",
+      "price": "Starting at $200/week",
+      "icon": "📢"
+    },
+    {
+      "id": 2,
+      "title": "Brand Promotion",
+      "description": "Full brand awareness campaign for your artist identity, merch line, or creative business. Content creation included.",
+      "price": "Starting at $350/week",
+      "icon": "🏷️"
+    },
+    {
+      "id": 3,
+      "title": "Partnership Packages",
+      "description": "Long-term promotional partnership with HB Media. Consistent presence, content strategy, and audience growth plan.",
+      "price": "Starting at $800/month",
+      "icon": "🤝"
+    }
+  ]
+}

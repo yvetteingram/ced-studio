@@ -2,7 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../components/ui/Card.jsx';
 import SectionHeader from '../components/ui/SectionHeader.jsx';
-import { promoServices } from '../data/services.js';
+import promoServicesData from '../data/promoServices.json';
+
+const { promoServices } = promoServicesData;
 
 const ACCENT = '#A855F7';
 

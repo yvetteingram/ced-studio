@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import Card from '../components/ui/Card.jsx';
 import SectionHeader from '../components/ui/SectionHeader.jsx';
-import { articles } from '../data/articles.js';
+import articlesData from '../data/articles.json';
+
+const { articles } = articlesData;
 
 const ACCENT = '#F59E0B';
 const CATEGORIES = ['All', 'Opinion', 'Reviews', 'Culture', 'Motivation'];

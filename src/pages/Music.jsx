@@ -2,37 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Card from "../components/ui/Card.jsx";
 import SectionHeader from "../components/ui/SectionHeader.jsx";
-import { musicServices } from "../data/services.js";
+import musicServicesData from "../data/musicServices.json";
+import videosData from "../data/videos.json";
+
+const { musicServices } = musicServicesData;
+const { videos } = videosData;
 
 const ACCENT = "#00C2FF";
-
-// ─── ADD YOUR VIDEOS HERE ───────────────────────────────────────────────────
-// id    → YouTube video ID (the part after ?v= in the URL)
-// title → Displayed below the video
-// label → Small label shown on the card
-const videos = [
-  {
-    id: "XTrSZmsziA0",
-    title: "Snowed In",
-    label: "Cjones",
-  },
-  {
-    id: "bPjU-je9nCQ",
-    title: "Straight to it",
-    label: "Cjones",
-  },
-  {
-    id: "jgPfwaFTOiU",
-    title: "Forever Grateful 2.5- [Full Tape Mix]",
-    label: "Cjones",
-  },
-  {
-    id: "w4b74taUq64",
-    title: "Round My Way",
-    label: "Cjones",
-  },
-];
-// ────────────────────────────────────────────────────────────────────────────
 
 export default function Music() {
   return (

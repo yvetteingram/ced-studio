@@ -1,0 +1,118 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  # ─── MUSIC VIDEOS ───────────────────────────────────────────────────────────
+  - name: videos
+    label: Music Videos
+    files:
+      - name: videos
+        label: Music Videos
+        file: src/data/videos.json
+        fields:
+          - name: videos
+            label: Videos
+            widget: list
+            fields:
+              - { name: id, label: "YouTube Video ID", widget: string, hint: "The part after ?v= in the YouTube URL" }
+              - { name: title, label: Title, widget: string }
+              - { name: label, label: Label, widget: string, default: Cjones }
+
+  # ─── ARTICLES (LIL SAID) ────────────────────────────────────────────────────
+  - name: articles
+    label: "Articles (Lil Said)"
+    files:
+      - name: articles
+        label: Articles
+        file: src/data/articles.json
+        fields:
+          - name: articles
+            label: Articles
+            widget: list
+            fields:
+              - { name: id, label: ID, widget: number }
+              - { name: title, label: Title, widget: string }
+              - name: category
+                label: Category
+                widget: select
+                options: [Opinion, Reviews, Culture, Motivation]
+              - { name: date, label: Date, widget: string, hint: "e.g. April 3, 2026" }
+              - { name: readTime, label: "Read Time", widget: string, hint: "e.g. 5 min read" }
+              - { name: excerpt, label: Excerpt, widget: text }
+
+  # ─── SERVICES & PRICING ─────────────────────────────────────────────────────
+  - name: services
+    label: "Services & Pricing"
+    files:
+      - name: music_services
+        label: "Cjones — Music Services"
+        file: src/data/musicServices.json
+        fields:
+          - name: musicServices
+            label: Services
+            widget: list
+            fields:
+              - { name: id, label: ID, widget: number }
+              - { name: icon, label: Icon, widget: string, hint: "Paste an emoji" }
+              - { name: title, label: Title, widget: string }
+              - { name: description, label: Description, widget: text }
+              - { name: price, label: Price, widget: string, hint: "e.g. Starting at $150" }
+
+      - name: promo_services
+        label: "HB Media — Promotion Services"
+        file: src/data/promoServices.json
+        fields:
+          - name: promoServices
+            label: Services
+            widget: list
+            fields:
+              - { name: id, label: ID, widget: number }
+              - { name: icon, label: Icon, widget: string, hint: "Paste an emoji" }
+              - { name: title, label: Title, widget: string }
+              - { name: description, label: Description, widget: text }
+              - { name: price, label: Price, widget: string }
+
+      - name: stream_services
+        label: "HB Stream — Gaming Services"
+        file: src/data/streamServices.json
+        fields:
+          - name: streamServices
+            label: Services
+            widget: list
+            fields:
+              - { name: id, label: ID, widget: number }
+              - { name: icon, label: Icon, widget: string, hint: "Paste an emoji" }
+              - { name: title, label: Title, widget: string }
+              - { name: description, label: Description, widget: text }
+              - { name: price, label: Price, widget: string }
+
+  # ─── SITE SETTINGS ──────────────────────────────────────────────────────────
+  - name: settings
+    label: "Site Settings"
+    files:
+      - name: socials
+        label: "Social Media Links"
+        file: src/data/socials.json
+        fields:
+          - name: socials
+            label: Socials
+            widget: list
+            fields:
+              - { name: label, label: Platform, widget: string }
+              - { name: href, label: URL, widget: string }
+
+      - name: platform_links
+        label: "HB Stream Platform Links"
+        file: src/data/platformLinks.json
+        fields:
+          - name: platformLinks
+            label: "Platform Links"
+            widget: list
+            fields:
+              - { name: label, label: Platform, widget: string }
+              - { name: handle, label: Handle, widget: string, hint: "e.g. @cedstream" }
+              - { name: href, label: URL, widget: string }

@@ -2,19 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Card from "../components/ui/Card.jsx";
 import SectionHeader from "../components/ui/SectionHeader.jsx";
-import { streamServices } from "../data/services.js";
+import streamServicesData from "../data/streamServices.json";
+import platformLinksData from "../data/platformLinks.json";
+
+const { streamServices } = streamServicesData;
+const { platformLinks } = platformLinksData;
 
 const ACCENT = "#22C55E";
 
-const platformLinks = [
-  { label: "Twitch", handle: "@cedstream", href: "#" },
-  {
-    label: "YouTube",
-    handle: "@HBStream",
-    href: "https://www.youtube.com/@cjonesss",
-  },
-  { label: "TikTok", handle: "@hbstream", href: "#" },
-];
 
 export default function Streaming() {
   return (

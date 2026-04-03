@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import socialsData from "../../data/socials.json";
+
+const { socials } = socialsData;
 
 const brands = [
   {
@@ -40,12 +43,6 @@ const brands = [
   },
 ];
 
-const socials = [
-  { label: "Twitter", href: "https://x.com/cjoness___" },
-  { label: "Instagram", href: "https://www.instagram.com/_cjoness" },
-  { label: "TikTok", href: "https://www.tiktok.com/@hbskiiii" },
-  { label: "YouTube", href: "https://www.youtube.com/@cjonesss" },
-];
 
 export default function Footer() {
   return (
