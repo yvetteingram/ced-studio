@@ -60,7 +60,7 @@ export default function Contact() {
         <p className="text-xs font-bold uppercase tracking-widest text-brand-silver mb-4">
           Get in Touch
         </p>
-        <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white mb-4">
           Work With Ced Studio
         </h1>
         <p className="text-brand-silver text-lg">

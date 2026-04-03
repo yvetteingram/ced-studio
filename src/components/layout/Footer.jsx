@@ -62,7 +62,7 @@ export default function Footer() {
             <p className="text-brand-silver text-sm leading-relaxed">
               One creator. Four brands. Infinite output.
             </p>
-            <div className="flex gap-4 mt-6">
+            <div className="flex flex-wrap gap-x-3 gap-y-2 mt-6">
               {socials.map((s) => (
                 <a
                   key={s.label}
@@ -79,7 +79,7 @@ export default function Footer() {
           {brands.map((brand) => (
             <div key={brand.name}>
               <h3
-                className="text-sm font-bold uppercase tracking-widest mb-4"
+                className="text-sm font-bold tracking-widest mb-4"
                 style={{ color: brand.color }}
               >
                 {brand.name}

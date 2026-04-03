@@ -45,11 +45,11 @@ export default function Home() {
       <section className="relative min-h-[90vh] flex items-center justify-center px-6 overflow-hidden">
         {/* Background gradient blobs */}
         <div
-          className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-10 pointer-events-none"
+          className="absolute top-0 left-1/4 w-48 h-48 sm:w-96 sm:h-96 rounded-full blur-3xl opacity-10 pointer-events-none"
           style={{ background: '#00C2FF' }}
         />
         <div
-          className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-3xl opacity-10 pointer-events-none"
+          className="absolute bottom-0 right-1/4 w-48 h-48 sm:w-96 sm:h-96 rounded-full blur-3xl opacity-10 pointer-events-none"
           style={{ background: '#A855F7' }}
         />
 
@@ -57,7 +57,7 @@ export default function Home() {
           <p className="text-brand-silver text-sm font-semibold uppercase tracking-widest mb-6">
             Ced Studio
           </p>
-          <h1 className="text-5xl md:text-7xl font-black leading-tight mb-8">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black leading-tight mb-8">
             <span className="text-white">One Creator.</span>
             <br />
             <span
@@ -73,7 +73,7 @@ export default function Home() {
             <br />
             <span className="text-white">Infinite Output.</span>
           </h1>
-          <p className="text-brand-silver text-xl mb-12 max-w-2xl mx-auto">
+          <p className="text-brand-silver text-base sm:text-xl mb-12 max-w-2xl mx-auto">
             Music. Promotion. Streaming. Writing. All under one roof — built by Ced, for creators
             ready to level up.
           </p>
@@ -182,10 +182,10 @@ export default function Home() {
 
       {/* Final CTA */}
       <section className="max-w-3xl mx-auto px-6 py-24 text-center">
-        <h2 className="text-4xl font-extrabold text-white mb-4">
+        <h2 className="text-2xl sm:text-4xl font-extrabold text-white mb-4">
           Ready to Work With Ced?
         </h2>
-        <p className="text-brand-silver text-lg mb-10">
+        <p className="text-brand-silver text-base sm:text-lg mb-10">
           Whether it is music, promo, streaming, or writing — let us build something together.
         </p>
         <Link to="/contact" className="btn-cjones text-lg px-10 py-4 inline-block">

@@ -24,13 +24,13 @@ export default function Music() {
           >
             Ced Studio — Music
           </p>
-          <h1 className="text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
             Cjones.{' '}
             <span style={{ color: ACCENT }}>Hook Specialist.</span>
             <br />
             Beat Maker. Artist.
           </h1>
-          <p className="text-brand-silver text-xl max-w-2xl mx-auto mb-10">
+          <p className="text-brand-silver text-base sm:text-xl max-w-2xl mx-auto mb-10">
             Delivering studio-quality hooks, feature verses, and original music for independent
             artists who refuse to settle.
           </p>
@@ -42,7 +42,7 @@ export default function Music() {
 
       {/* Bio */}
       <section className="max-w-3xl mx-auto px-6 py-16">
-        <div className="card p-10" style={{ borderLeft: `3px solid ${ACCENT}` }}>
+        <div className="card p-6 sm:p-10" style={{ borderLeft: `3px solid ${ACCENT}` }}>
           <h2 className="text-2xl font-bold text-white mb-4">About Cjones</h2>
           <p className="text-brand-silver leading-relaxed mb-4">
             Cjones is a multi-talented artist, hook specialist, and beat maker operating out of the

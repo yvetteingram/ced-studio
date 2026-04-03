@@ -53,12 +53,12 @@ export default function Promotion() {
           >
             Ced Studio — Promotion
           </p>
-          <h1 className="text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
             <span style={{ color: ACCENT }}>HB Media.</span>
             <br />
             Your Music. Our Platform.
           </h1>
-          <p className="text-brand-silver text-xl max-w-2xl mx-auto mb-10">
+          <p className="text-brand-silver text-base sm:text-xl max-w-2xl mx-auto mb-10">
             Real promotion. Real growth. HB Media puts your sound in front of the right audience
             using proven multi-platform strategies.
           </p>

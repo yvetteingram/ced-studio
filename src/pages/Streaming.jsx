@@ -30,12 +30,12 @@ export default function Streaming() {
           >
             Ced Studio — Streaming
           </p>
-          <h1 className="text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
             <span style={{ color: ACCENT }}>HB Stream.</span>
             <br />
             Live. Gaming. Content.
           </h1>
-          <p className="text-brand-silver text-xl max-w-2xl mx-auto mb-10">
+          <p className="text-brand-silver text-base sm:text-xl max-w-2xl mx-auto mb-10">
             Join Ced live for gaming sessions, interactive streams, and exclusive collab
             opportunities. The community is growing — come be part of it.
           </p>

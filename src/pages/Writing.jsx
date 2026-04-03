@@ -40,12 +40,12 @@ export default function Writing() {
           >
             Ced Studio — Writing
           </p>
-          <h1 className="text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
             <span style={{ color: ACCENT }}>Lil Said.</span>
             <br />
             Opinions Worth Reading.
           </h1>
-          <p className="text-brand-silver text-xl max-w-2xl mx-auto mb-10">
+          <p className="text-brand-silver text-base sm:text-xl max-w-2xl mx-auto mb-10">
             Culture, commentary, music reviews, and the kind of motivation that does not come in
             generic quotes. Real thoughts from a real creative.
           </p>
@@ -161,7 +161,7 @@ export default function Writing() {
 
       {/* About Lil Said */}
       <section className="max-w-3xl mx-auto px-6 py-20">
-        <div className="card p-10" style={{ borderLeft: `3px solid ${ACCENT}` }}>
+        <div className="card p-6 sm:p-10" style={{ borderLeft: `3px solid ${ACCENT}` }}>
           <h2 className="text-2xl font-bold text-white mb-4">About Lil Said</h2>
           <p className="text-brand-silver leading-relaxed mb-4">
             Lil Said is the intellectual arm of Ced Studio — a writing and commentary brand built
