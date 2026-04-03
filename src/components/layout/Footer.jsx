@@ -1,51 +1,50 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const brands = [
   {
-    name: 'Cjones',
-    color: '#00C2FF',
+    name: "Cjones",
+    color: "#00C2FF",
     links: [
-      { label: 'Music', to: '/music' },
-      { label: 'Hooks & Features', to: '/music' },
-      { label: 'Beats', to: '/music' },
+      { label: "Music", to: "/music" },
+      { label: "Hooks & Features", to: "/music" },
+      { label: "Beats", to: "/music" },
     ],
   },
   {
-    name: 'HB Media',
-    color: '#A855F7',
+    name: "HB Media",
+    color: "#A855F7",
     links: [
-      { label: 'Promotion', to: '/promotion' },
-      { label: 'Services', to: '/promotion' },
-      { label: 'Partnerships', to: '/contact' },
+      { label: "Promotion", to: "/promotion" },
+      { label: "Services", to: "/promotion" },
+      { label: "Partnerships", to: "/contact" },
     ],
   },
   {
-    name: 'HB Stream',
-    color: '#22C55E',
+    name: "HB Stream",
+    color: "#22C55E",
     links: [
-      { label: 'Streaming', to: '/streaming' },
-      { label: 'Play With Ced', to: '/streaming' },
-      { label: 'Request a Stream', to: '/streaming' },
+      { label: "Streaming", to: "/streaming" },
+      { label: "Play With Ced", to: "/streaming" },
+      { label: "Request a Stream", to: "/streaming" },
     ],
   },
   {
-    name: 'Lil Said',
-    color: '#F59E0B',
+    name: "Lil Said",
+    color: "#F59E0B",
     links: [
-      { label: 'Writing', to: '/writing' },
-      { label: 'Articles', to: '/writing' },
-      { label: 'Commentary', to: '/writing' },
+      { label: "Writing", to: "/writing" },
+      { label: "Articles", to: "/writing" },
+      { label: "Commentary", to: "/writing" },
     ],
   },
 ];
 
 const socials = [
-  { label: 'Twitter', href: '#' },
-  { label: 'Instagram', href: '#' },
-  { label: 'TikTok', href: '#' },
-  { label: 'YouTube', href: '#' },
-  { label: 'Twitch', href: '#' },
+  { label: "Twitter", href: "https://x.com/cjoness___" },
+  { label: "Instagram", href: "https://www.instagram.com/_cjoness" },
+  { label: "TikTok", href: "https://www.tiktok.com/@hbskiiii" },
+  { label: "YouTube", href: "https://www.youtube.com/@cjonesss" },
 ];
 
 export default function Footer() {
@@ -105,7 +104,10 @@ export default function Footer() {
           <p className="text-brand-silver text-sm">
             &copy; {new Date().getFullYear()} Ced Studio. All rights reserved.
           </p>
-          <Link to="/contact" className="text-brand-silver hover:text-white text-sm transition-colors">
+          <Link
+            to="/contact"
+            className="text-brand-silver hover:text-white text-sm transition-colors"
+          >
             Contact
           </Link>
         </div>

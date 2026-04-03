@@ -1,15 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Card from '../components/ui/Card.jsx';
-import SectionHeader from '../components/ui/SectionHeader.jsx';
-import { streamServices } from '../data/services.js';
+import React from "react";
+import { Link } from "react-router-dom";
+import Card from "../components/ui/Card.jsx";
+import SectionHeader from "../components/ui/SectionHeader.jsx";
+import { streamServices } from "../data/services.js";
 
-const ACCENT = '#22C55E';
+const ACCENT = "#22C55E";
 
 const platformLinks = [
-  { label: 'Twitch', handle: '@cedstream', href: '#' },
-  { label: 'YouTube', handle: '@HBStream', href: '#' },
-  { label: 'TikTok', handle: '@hbstream', href: '#' },
+  { label: "Twitch", handle: "@cedstream", href: "#" },
+  {
+    label: "YouTube",
+    handle: "@HBStream",
+    href: "https://www.youtube.com/@cjonesss",
+  },
+  { label: "TikTok", handle: "@hbstream", href: "#" },
 ];
 
 export default function Streaming() {
@@ -36,10 +40,14 @@ export default function Streaming() {
             Live. Gaming. Content.
           </h1>
           <p className="text-brand-silver text-base sm:text-xl max-w-2xl mx-auto mb-10">
-            Join Ced live for gaming sessions, interactive streams, and exclusive collab
-            opportunities. The community is growing — come be part of it.
+            Join Ced live for gaming sessions, interactive streams, and
+            exclusive collab opportunities. The community is growing — come be
+            part of it.
           </p>
-          <Link to="/contact" className="btn-hbstream text-base px-8 py-4 inline-block">
+          <Link
+            to="/contact"
+            className="btn-hbstream text-base px-8 py-4 inline-block"
+          >
             Join the Stream
           </Link>
         </div>
@@ -54,30 +62,37 @@ export default function Streaming() {
         />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { title: 'Gaming Session #1', game: 'TBD' },
-            { title: 'Gaming Session #2', game: 'TBD' },
-            { title: 'Stream Collab', game: 'TBD' },
+            { title: "Gaming Session #1", game: "TBD" },
+            { title: "Gaming Session #2", game: "TBD" },
+            { title: "Stream Collab", game: "TBD" },
           ].map((stream, i) => (
             <div key={i} className="card rounded-2xl overflow-hidden">
               <div
                 className="flex flex-col items-center justify-center"
                 style={{
-                  background: '#0a0a0a',
-                  height: '180px',
+                  background: "#0a0a0a",
+                  height: "180px",
                   borderBottom: `1px solid #1F1F1F`,
                 }}
               >
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center mb-3"
-                  style={{ background: '#1a1a1a', border: `2px solid ${ACCENT}` }}
+                  style={{
+                    background: "#1a1a1a",
+                    border: `2px solid ${ACCENT}`,
+                  }}
                 >
                   <span className="text-2xl">🎮</span>
                 </div>
-                <p className="text-brand-silver text-sm font-semibold">Stream Coming Soon</p>
+                <p className="text-brand-silver text-sm font-semibold">
+                  Stream Coming Soon
+                </p>
               </div>
               <div className="p-5">
                 <p className="text-white font-semibold">{stream.title}</p>
-                <p className="text-brand-silver text-sm mt-1">Game: {stream.game}</p>
+                <p className="text-brand-silver text-sm mt-1">
+                  Game: {stream.game}
+                </p>
               </div>
             </div>
           ))}
@@ -95,7 +110,9 @@ export default function Streaming() {
           {streamServices.map((service) => (
             <Card key={service.id} accent={ACCENT} className="flex flex-col">
               <div className="text-3xl mb-4">{service.icon}</div>
-              <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
+              <h3 className="text-lg font-bold text-white mb-2">
+                {service.title}
+              </h3>
               <p className="text-brand-silver text-sm flex-1 mb-4 leading-relaxed">
                 {service.description}
               </p>
@@ -139,7 +156,10 @@ export default function Streaming() {
         <p className="text-brand-silver mb-8">
           Reach out and let us set up something live for your audience.
         </p>
-        <Link to="/contact" className="btn-hbstream text-base px-8 py-4 inline-block">
+        <Link
+          to="/contact"
+          className="btn-hbstream text-base px-8 py-4 inline-block"
+        >
           Get in Touch
         </Link>
       </section>
