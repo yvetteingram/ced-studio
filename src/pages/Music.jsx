@@ -27,8 +27,8 @@ const videos = [
     label: "Cjones",
   },
   {
-    id: "j0_B8IAV8Xk&list=RDj0_B8IAV8Xk&index=1",
-    title: "Letter 2 Bro",
+    id: "w4b74taUq64",
+    title: "Round My Way",
     label: "Cjones",
   },
 ];
