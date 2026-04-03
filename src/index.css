@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-brand-dark text-white antialiased;
+  }
+}
+
+@layer components {
+  .btn-cjones {
+    @apply bg-brand-cjones hover:opacity-90 text-black font-bold px-6 py-3 rounded-lg transition-all;
+  }
+  .btn-hbmedia {
+    @apply bg-brand-hbmedia hover:opacity-90 text-white font-bold px-6 py-3 rounded-lg transition-all;
+  }
+  .btn-hbstream {
+    @apply bg-brand-hbstream hover:opacity-90 text-black font-bold px-6 py-3 rounded-lg transition-all;
+  }
+  .btn-lilsaid {
+    @apply bg-brand-lilsaid hover:opacity-90 text-black font-bold px-6 py-3 rounded-lg transition-all;
+  }
+  .btn-outline {
+    @apply border border-brand-border hover:border-white text-white font-semibold px-6 py-3 rounded-lg transition-all;
+  }
+  .card {
+    @apply bg-brand-card border border-brand-border rounded-2xl;
+  }
+}
