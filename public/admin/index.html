@@ -1,12 +1,874 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ced Studio — Admin</title>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  </head>
-  <body>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ced Studio — Admin</title>
+  <!-- Netlify Identity — DO NOT REMOVE -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    :root {
+      --bg:       #080808;
+      --surface:  #111111;
+      --surface2: #1a1a1a;
+      --border:   #2a2a2a;
+      --text:     #f0f0f0;
+      --muted:    #9ca3af;
+      --cjones:   #00c2ff;
+      --hbmedia:  #a855f7;
+      --hbstream: #22c55e;
+      --lilsaid:  #f59e0b;
+      --danger:   #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── LOGIN ─────────────────────────────────────────────────── */
+    #login-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 44px 32px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .login-logo {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+    .login-logo span { color: var(--cjones); }
+
+    .login-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 36px;
+    }
+
+    .btn-signin {
+      background: var(--cjones);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 15px 32px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      letter-spacing: 0.02em;
+    }
+    .btn-signin:active { opacity: 0.8; }
+
+    /* ── DASHBOARD ─────────────────────────────────────────────── */
+    #dashboard { display: none; min-height: 100vh; padding-bottom: 88px; }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .top-bar-logo { font-weight: 900; font-size: 1.1rem; }
+    .top-bar-logo span { color: var(--cjones); }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .btn-logout:active { border-color: var(--danger); color: var(--danger); }
+
+    /* ── TAB BAR ───────────────────────────────────────────────── */
+    .tab-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      z-index: 100;
+    }
+
+    .tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 10px 4px 14px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      transition: color 0.15s;
+    }
+    .tab-btn .tab-icon { font-size: 1.4rem; line-height: 1; }
+    .tab-btn.active { color: var(--cjones); }
+
+    /* ── SECTIONS ──────────────────────────────────────────────── */
+    .section { display: none; padding: 20px; max-width: 680px; margin: 0 auto; }
+    .section.active { display: block; }
+
+    .section-header { margin-bottom: 20px; }
+    .section-title { font-size: 1.5rem; font-weight: 900; margin-bottom: 6px; }
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .section-desc strong { color: var(--text); }
+
+    /* ── BRAND TAGS ────────────────────────────────────────────── */
+    .brand-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .brand-cjones   { background: rgba(0,194,255,.15);   color: var(--cjones); }
+    .brand-hbmedia  { background: rgba(168,85,247,.15);  color: var(--hbmedia); }
+    .brand-hbstream { background: rgba(34,197,94,.15);   color: var(--hbstream); }
+    .brand-lilsaid  { background: rgba(245,158,11,.15);  color: var(--lilsaid); }
+
+    /* ── CARDS ─────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .card.accent-cjones   { border-left: 3px solid var(--cjones); }
+    .card.accent-hbmedia  { border-left: 3px solid var(--hbmedia); }
+    .card.accent-hbstream { border-left: 3px solid var(--hbstream); }
+    .card.accent-lilsaid  { border-left: 3px solid var(--lilsaid); }
+
+    .card-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .card-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px; height: 26px;
+      background: var(--surface2);
+      border-radius: 50%;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── FORM ELEMENTS ─────────────────────────────────────────── */
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    textarea,
+    select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--text);
+      padding: 11px 13px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      margin-bottom: 13px;
+      -webkit-appearance: none;
+      appearance: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--cjones);
+    }
+    input::placeholder, textarea::placeholder { color: #555; }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    .field-hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: -10px;
+      margin-bottom: 13px;
+    }
+
+    select option { background: var(--surface); }
+
+    /* ── BUTTONS ───────────────────────────────────────────────── */
+    .btn-add {
+      background: var(--surface2);
+      color: var(--muted);
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 13px 20px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 14px;
+      transition: all 0.2s;
+    }
+    .btn-add:active { border-color: var(--cjones); color: var(--cjones); }
+
+    .btn-delete {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 6px;
+      border-radius: 6px;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .btn-delete:active { color: var(--danger); }
+
+    .btn-save {
+      display: block;
+      border: none;
+      border-radius: 12px;
+      padding: 15px 24px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      transition: opacity 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .btn-save:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-save:active { opacity: 0.8; }
+
+    .btn-save-blue   { background: var(--cjones);   color: #000; }
+    .btn-save-purple { background: var(--hbmedia);  color: #fff; }
+    .btn-save-green  { background: var(--hbstream); color: #000; }
+    .btn-save-amber  { background: var(--lilsaid);  color: #000; }
+
+    /* ── PREVIEW LINK ──────────────────────────────────────────── */
+    .preview-link {
+      display: inline-block;
+      color: var(--cjones);
+      font-size: 0.8rem;
+      text-decoration: none;
+      margin-top: -8px;
+      margin-bottom: 13px;
+    }
+
+    /* ── DIVIDER ───────────────────────────────────────────────── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+    /* ── SKELETON ──────────────────────────────────────────────── */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+      background-size: 200% 100%;
+      animation: sk 1.4s infinite;
+      border-radius: 12px;
+      height: 72px;
+      margin-bottom: 12px;
+    }
+    @keyframes sk { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ── TOAST ─────────────────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 96px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      white-space: nowrap;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #toast.success { border-color: var(--hbstream); color: var(--hbstream); }
+    #toast.error   { border-color: var(--danger);   color: var(--danger); }
+
+    /* ── EMPTY STATE ───────────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      padding: 32px 20px;
+      font-size: 0.9rem;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .section { padding: 28px 24px; }
+      .tab-btn { font-size: 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─────────────────────── LOGIN ──────────────────────────────── -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Ced<span>Studio</span></div>
+    <div class="login-sub">Content Admin Panel</div>
+    <button type="button" class="btn-signin" onclick="netlify.identity.open()">Sign In</button>
+  </div>
+</div>
+
+<!-- ─────────────────────── DASHBOARD ─────────────────────────── -->
+<div id="dashboard">
+
+  <div class="top-bar">
+    <div class="top-bar-logo">Ced<span>Studio</span> Admin</div>
+    <button type="button" class="btn-logout" onclick="netlify.identity.logout()">Log Out</button>
+  </div>
+
+  <!-- ── VIDEOS TAB ──────────────────────────────────────────── -->
+  <div id="sec-videos" class="section active">
+    <div class="section-header">
+      <div class="section-title">🎵 Music Videos</div>
+      <div class="section-desc">
+        Add or remove YouTube videos from the Cjones music page.<br/>
+        <strong>How to get a Video ID:</strong> Open the YouTube video → copy the code after <strong>?v=</strong> in the URL.<br/>
+        Example URL: youtube.com/watch?v=<strong>XTrSZmsziA0</strong>
+      </div>
+    </div>
+    <div id="videos-list"></div>
+    <button type="button" class="btn-add" onclick="addVideo()">＋ Add New Video</button>
+    <button type="button" class="btn-save btn-save-blue" id="btn-save-videos" onclick="saveSection('videos')">
+      Save Videos
+    </button>
+  </div>
+
+  <!-- ── PRICES TAB ──────────────────────────────────────────── -->
+  <div id="sec-prices" class="section">
+    <div class="section-header">
+      <div class="section-title">💰 Services & Pricing</div>
+      <div class="section-desc">
+        Update prices and descriptions for any service. Hit the save button for each brand after making changes.
+        <br/><strong>Tip:</strong> Changes go live on the site about 1–2 minutes after saving.
+      </div>
+    </div>
+
+    <div class="brand-tag brand-cjones">Cjones — Music Services</div>
+    <div id="music-services-list"></div>
+    <button type="button" class="btn-save btn-save-blue" id="btn-save-music" onclick="saveSection('musicServices')">
+      Save Cjones Prices
+    </button>
+
+    <hr class="divider" />
+
+    <div class="brand-tag brand-hbmedia">HB Media — Promotion</div>
+    <div id="promo-services-list"></div>
+    <button type="button" class="btn-save btn-save-purple" id="btn-save-promo" onclick="saveSection('promoServices')">
+      Save HB Media Prices
+    </button>
+
+    <hr class="divider" />
+
+    <div class="brand-tag brand-hbstream">HB Stream — Gaming</div>
+    <div id="stream-services-list"></div>
+    <button type="button" class="btn-save btn-save-green" id="btn-save-stream" onclick="saveSection('streamServices')">
+      Save HB Stream Prices
+    </button>
+  </div>
+
+  <!-- ── ARTICLES TAB ────────────────────────────────────────── -->
+  <div id="sec-articles" class="section">
+    <div class="section-header">
+      <div class="section-title">✍️ Articles</div>
+      <div class="section-desc">
+        Manage Lil Said writing pieces. Tap <strong>Add New Article</strong> to create one, or edit any existing entry below.
+      </div>
+    </div>
+    <button type="button" class="btn-add" onclick="addArticle()">＋ Add New Article</button>
+    <div id="articles-list"></div>
+    <button type="button" class="btn-save btn-save-amber" id="btn-save-articles" onclick="saveSection('articles')">
+      Save Articles
+    </button>
+  </div>
+
+  <!-- ── SOCIALS TAB ─────────────────────────────────────────── -->
+  <div id="sec-socials" class="section">
+    <div class="section-header">
+      <div class="section-title">🔗 Social Links</div>
+      <div class="section-desc">
+        Update social media URLs here. The <strong>Footer Socials</strong> appear at the bottom of every page. The <strong>HB Stream Links</strong> appear on the streaming page.
+      </div>
+    </div>
+
+    <div class="brand-tag brand-cjones">Footer Socials</div>
+    <div id="socials-list"></div>
+    <button type="button" class="btn-save btn-save-blue" id="btn-save-socials" style="margin-bottom:28px;" onclick="saveSection('socials')">
+      Save Footer Socials
+    </button>
+
+    <hr class="divider" />
+
+    <div class="brand-tag brand-hbstream">HB Stream Platform Links</div>
+    <div id="platforms-list"></div>
+    <button type="button" class="btn-save btn-save-green" id="btn-save-platforms" onclick="saveSection('platformLinks')">
+      Save Platform Links
+    </button>
+  </div>
+
+  <!-- ── TAB BAR ─────────────────────────────────────────────── -->
+  <div class="tab-bar">
+    <button type="button" class="tab-btn active" data-tab="videos" onclick="switchTab('videos')">
+      <span class="tab-icon">🎵</span>Videos
+    </button>
+    <button type="button" class="tab-btn" data-tab="prices" onclick="switchTab('prices')">
+      <span class="tab-icon">💰</span>Prices
+    </button>
+    <button type="button" class="tab-btn" data-tab="articles" onclick="switchTab('articles')">
+      <span class="tab-icon">✍️</span>Articles
+    </button>
+    <button type="button" class="tab-btn" data-tab="socials" onclick="switchTab('socials')">
+      <span class="tab-icon">🔗</span>Socials
+    </button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────────
+   STATE
+───────────────────────────────────────────────────────────────── */
+const state = { data: {}, shas: {} };
+
+const FILE_MAP = {
+  videos:        'src/data/videos.json',
+  musicServices: 'src/data/musicServices.json',
+  promoServices: 'src/data/promoServices.json',
+  streamServices:'src/data/streamServices.json',
+  articles:      'src/data/articles.json',
+  socials:       'src/data/socials.json',
+  platformLinks: 'src/data/platformLinks.json'
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   AUTH
+───────────────────────────────────────────────────────────────── */
+netlify.identity.on('init', user => { if (user) startDashboard(user); });
+netlify.identity.on('login', user => { netlify.identity.close(); startDashboard(user); });
+netlify.identity.on('logout', () => {
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  state.data = {}; state.shas = {};
+});
+
+async function startDashboard(user) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  await loadAll();
+}
+
+async function getToken() {
+  const u = netlify.identity.currentUser();
+  if (!u) throw new Error('Not signed in');
+  return u.jwt();
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   GIT GATEWAY
+───────────────────────────────────────────────────────────────── */
+async function fetchFile(path) {
+  const token = await getToken();
+  const res = await fetch(`/.netlify/git/github/contents/${path}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!res.ok) throw new Error(`Could not load ${path} (${res.status})`);
+  const json = await res.json();
+  const text = b64Decode(json.content);
+  return { content: JSON.parse(text), sha: json.sha };
+}
+
+async function saveFile(path, sha, content, message) {
+  const token = await getToken();
+  const encoded = b64Encode(JSON.stringify(content, null, 2));
+  const res = await fetch(`/.netlify/git/github/contents/${path}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, content: encoded, sha })
+  });
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`Save failed (${res.status}): ${txt.slice(0, 120)}`);
+  }
+  const result = await res.json();
+  return result.content.sha;
+}
+
+function b64Encode(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  bytes.forEach(b => binary += String.fromCharCode(b));
+  return btoa(binary);
+}
+
+function b64Decode(b64) {
+  const binary = atob(b64.replace(/\n/g, ''));
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   LOAD
+───────────────────────────────────────────────────────────────── */
+function showSkeletons() {
+  ['videos-list','music-services-list','promo-services-list','stream-services-list',
+   'articles-list','socials-list','platforms-list'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+  });
+}
+
+async function loadAll() {
+  showSkeletons();
+  const keys = Object.keys(FILE_MAP);
+  const results = await Promise.allSettled(keys.map(k => fetchFile(FILE_MAP[k])));
+  results.forEach((r, i) => {
+    if (r.status === 'fulfilled') {
+      state.data[keys[i]] = r.value.content;
+      state.shas[keys[i]] = r.value.sha;
+    } else {
+      console.error(keys[i], r.reason);
+    }
+  });
+  renderAll();
+}
+
+function renderAll() {
+  renderVideos();
+  renderServices('musicServices', 'music-services-list', 'cjones');
+  renderServices('promoServices', 'promo-services-list', 'hbmedia');
+  renderServices('streamServices','stream-services-list', 'hbstream');
+  renderArticles();
+  renderSocials();
+  renderPlatforms();
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   VIDEOS
+───────────────────────────────────────────────────────────────── */
+function renderVideos() {
+  const el = document.getElementById('videos-list');
+  const list = state.data.videos?.videos || [];
+  if (!list.length) {
+    el.innerHTML = '<div class="empty-state">No videos yet — tap "Add New Video" below.</div>';
+    return;
+  }
+  el.innerHTML = list.map((v, i) => `
+    <div class="card accent-cjones">
+      <div class="card-row">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="card-num">${i + 1}</span>
+          <strong style="font-size:.95rem;">${h(v.title) || 'Untitled'}</strong>
+        </div>
+        <button class="btn-delete" onclick="deleteItem('videos','videos',${i})" title="Remove">✕</button>
+      </div>
+      <label>Video Title</label>
+      <input type="text" value="${h(v.title)}"
+        onchange="state.data.videos.videos[${i}].title=this.value; this.closest('.card').querySelector('strong').textContent=this.value||'Untitled'"
+        placeholder="e.g. Snowed In" />
+      <label>YouTube Video ID</label>
+      <input type="text" value="${h(v.id)}" id="vid-id-${i}"
+        onchange="state.data.videos.videos[${i}].id=this.value; updateVidPreview(${i},this.value)"
+        placeholder="e.g. XTrSZmsziA0" />
+      <div class="field-hint">Copy the code after <strong>?v=</strong> in the YouTube URL</div>
+      <a class="preview-link" id="vid-link-${i}"
+        href="https://www.youtube.com/watch?v=${h(v.id)}" target="_blank">
+        ▶ Preview on YouTube ↗
+      </a>
+    </div>
+  `).join('');
+}
+
+function updateVidPreview(i, id) {
+  const a = document.getElementById(`vid-link-${i}`);
+  if (a) a.href = `https://www.youtube.com/watch?v=${id}`;
+}
+
+function addVideo() {
+  if (!state.data.videos) state.data.videos = { videos: [] };
+  state.data.videos.videos.push({ id: '', title: 'New Video', label: 'Cjones' });
+  renderVideos();
+  document.querySelectorAll('#videos-list .card').forEach((c, i, arr) => {
+    if (i === arr.length - 1) c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SERVICES
+───────────────────────────────────────────────────────────────── */
+function renderServices(key, containerId, brand) {
+  const el = document.getElementById(containerId);
+  const list = state.data[key]?.[key] || [];
+  if (!list.length) { el.innerHTML = '<div class="empty-state">No services found.</div>'; return; }
+  el.innerHTML = list.map((s, i) => `
+    <div class="card accent-${brand}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <span style="font-size:1.6rem;line-height:1;">${h(s.icon)}</span>
+        <strong style="font-size:1rem;">${h(s.title)}</strong>
+      </div>
+      <label>Price</label>
+      <input type="text" value="${h(s.price)}"
+        onchange="state.data['${key}']['${key}'][${i}].price=this.value"
+        placeholder="e.g. $150" />
+      <label>Description</label>
+      <textarea onchange="state.data['${key}']['${key}'][${i}].description=this.value"
+        placeholder="Short description...">${h(s.description)}</textarea>
+    </div>
+  `).join('');
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   ARTICLES
+───────────────────────────────────────────────────────────────── */
+function renderArticles() {
+  const el = document.getElementById('articles-list');
+  const list = state.data.articles?.articles || [];
+  if (!list.length) {
+    el.innerHTML = '<div class="empty-state">No articles yet — tap "Add New Article" above.</div>';
+    return;
+  }
+  el.innerHTML = list.map((a, i) => `
+    <div class="card accent-lilsaid">
+      <div class="card-row">
+        <strong style="font-size:.9rem;">${h(a.title) || 'Untitled Article'}</strong>
+        <button class="btn-delete" onclick="deleteItem('articles','articles',${i})" title="Delete">✕</button>
+      </div>
+      <label>Title</label>
+      <input type="text" value="${h(a.title)}"
+        onchange="state.data.articles.articles[${i}].title=this.value; this.closest('.card').querySelector('strong').textContent=this.value||'Untitled Article'"
+        placeholder="Article title" />
+      <label>Category</label>
+      <select onchange="state.data.articles.articles[${i}].category=this.value">
+        ${['Opinion','Reviews','Culture','Motivation'].map(c =>
+          `<option value="${c}" ${a.category===c?'selected':''}>${c}</option>`
+        ).join('')}
+      </select>
+      <label>Date</label>
+      <input type="text" value="${h(a.date)}"
+        onchange="state.data.articles.articles[${i}].date=this.value"
+        placeholder="e.g. April 3, 2026" />
+      <label>Read Time</label>
+      <input type="text" value="${h(a.readTime)}"
+        onchange="state.data.articles.articles[${i}].readTime=this.value"
+        placeholder="e.g. 5 min read" />
+      <label>Excerpt / Summary</label>
+      <textarea onchange="state.data.articles.articles[${i}].excerpt=this.value"
+        placeholder="Short summary...">${h(a.excerpt)}</textarea>
+    </div>
+  `).join('');
+}
+
+function addArticle() {
+  if (!state.data.articles) state.data.articles = { articles: [] };
+  const maxId = state.data.articles.articles.reduce((m, a) => Math.max(m, a.id || 0), 0);
+  const today = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+  state.data.articles.articles.unshift({
+    id: maxId + 1,
+    title: '',
+    category: 'Opinion',
+    date: today,
+    readTime: '5 min read',
+    excerpt: ''
+  });
+  renderArticles();
+  document.getElementById('articles-list').firstElementChild?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SOCIALS
+───────────────────────────────────────────────────────────────── */
+function renderSocials() {
+  const el = document.getElementById('socials-list');
+  const list = state.data.socials?.socials || [];
+  el.innerHTML = list.map((s, i) => `
+    <div class="card">
+      <div style="display:flex;gap:10px;align-items:flex-end;">
+        <div style="flex:0 0 120px;">
+          <label>Platform</label>
+          <input type="text" value="${h(s.label)}"
+            onchange="state.data.socials.socials[${i}].label=this.value"
+            placeholder="e.g. Instagram" style="margin-bottom:0;" />
+        </div>
+        <div style="flex:1;">
+          <label>URL</label>
+          <input type="url" value="${h(s.href)}"
+            onchange="state.data.socials.socials[${i}].href=this.value"
+            placeholder="https://..." style="margin-bottom:0;" />
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPlatforms() {
+  const el = document.getElementById('platforms-list');
+  const list = state.data.platformLinks?.platformLinks || [];
+  el.innerHTML = list.map((p, i) => `
+    <div class="card accent-hbstream">
+      <label>Platform Name</label>
+      <input type="text" value="${h(p.label)}"
+        onchange="state.data.platformLinks.platformLinks[${i}].label=this.value"
+        placeholder="e.g. Twitch" />
+      <label>Handle / Username</label>
+      <input type="text" value="${h(p.handle)}"
+        onchange="state.data.platformLinks.platformLinks[${i}].handle=this.value"
+        placeholder="e.g. @cedstream" />
+      <label>URL</label>
+      <input type="url" value="${h(p.href)}"
+        onchange="state.data.platformLinks.platformLinks[${i}].href=this.value"
+        placeholder="https://..." />
+    </div>
+  `).join('');
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SHARED DELETE
+───────────────────────────────────────────────────────────────── */
+function deleteItem(fileKey, arrayKey, i) {
+  const labels = {
+    videos: 'Remove this video?',
+    articles: 'Delete this article?'
+  };
+  if (!confirm(labels[fileKey] || 'Delete this item?')) return;
+  state.data[fileKey][arrayKey].splice(i, 1);
+  if (fileKey === 'videos') renderVideos();
+  if (fileKey === 'articles') renderArticles();
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SAVE
+───────────────────────────────────────────────────────────────── */
+const BTN_MAP = {
+  videos:        { id: 'btn-save-videos',   label: 'Save Videos' },
+  musicServices: { id: 'btn-save-music',    label: 'Save Cjones Prices' },
+  promoServices: { id: 'btn-save-promo',    label: 'Save HB Media Prices' },
+  streamServices:{ id: 'btn-save-stream',   label: 'Save HB Stream Prices' },
+  articles:      { id: 'btn-save-articles', label: 'Save Articles' },
+  socials:       { id: 'btn-save-socials',  label: 'Save Footer Socials' },
+  platformLinks: { id: 'btn-save-platforms',label: 'Save Platform Links' }
+};
+
+async function saveSection(key) {
+  const { id, label } = BTN_MAP[key];
+  const btn = document.getElementById(id);
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+  try {
+    const newSha = await saveFile(
+      FILE_MAP[key],
+      state.shas[key],
+      state.data[key],
+      `Update ${key} via admin panel`
+    );
+    state.shas[key] = newSha;
+    showToast('✓ Saved! Site updates in ~1–2 min.', 'success');
+  } catch (e) {
+    showToast('Error: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = label; }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   NAVIGATION
+───────────────────────────────────────────────────────────────── */
+function switchTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`sec-${tab}`).classList.add('active');
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   UTILS
+───────────────────────────────────────────────────────────────── */
+function h(val) {
+  if (val === null || val === undefined) return '';
+  return String(val)
+    .replace(/&/g,'&amp;').replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+let toastTimer;
+function showToast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = ''; }, 3600);
+}
+</script>
+</body>
 </html>
