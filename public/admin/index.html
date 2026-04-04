@@ -4,8 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ced Studio — Admin</title>
-  <!-- Netlify Identity — DO NOT REMOVE -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <!-- no external scripts needed -->
   <style>
     :root {
       --bg:       #080808;
@@ -375,8 +374,18 @@
   <div class="login-card">
     <div class="login-logo">Ced<span>Studio</span></div>
     <div class="login-sub">Content Admin Panel</div>
-    <button type="button" class="btn-signin" id="btn-signin" onclick="doSignIn()">Sign In</button>
-    <div id="login-error" style="display:none;margin-top:14px;padding:12px;background:rgba(239,68,68,.1);border:1px solid var(--danger);border-radius:10px;color:var(--danger);font-size:.83rem;line-height:1.5;"></div>
+    <form id="login-form" onsubmit="doSignIn(event)">
+      <div style="text-align:left;margin-bottom:16px;">
+        <label for="login-email" style="display:block;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Email</label>
+        <input type="email" id="login-email" placeholder="your@email.com" required
+          style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:9px;color:#f0f0f0;padding:11px 13px;font-size:.95rem;font-family:inherit;-webkit-appearance:none;" />
+        <label for="login-password" style="display:block;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Password</label>
+        <input type="password" id="login-password" placeholder="Password" required
+          style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:9px;color:#f0f0f0;padding:11px 13px;font-size:.95rem;font-family:inherit;-webkit-appearance:none;" />
+      </div>
+      <button type="submit" class="btn-signin" id="btn-signin">Sign In</button>
+    </form>
+    <div id="login-error" style="display:none;margin-top:14px;padding:12px;background:rgba(239,68,68,.1);border:1px solid var(--danger);border-radius:10px;color:var(--danger);font-size:.83rem;line-height:1.5;text-align:left;"></div>
   </div>
 </div>
 
@@ -385,7 +394,7 @@
 
   <div class="top-bar">
     <div class="top-bar-logo">Ced<span>Studio</span> Admin</div>
-    <button type="button" class="btn-logout" onclick="netlify.identity.logout()">Log Out</button>
+    <button type="button" class="btn-logout" onclick="doLogout()">Log Out</button>
   </div>
 
   <!-- ── VIDEOS TAB ──────────────────────────────────────────── -->
@@ -514,54 +523,92 @@ const FILE_MAP = {
 };
 
 /* ─────────────────────────────────────────────────────────────────
-   AUTH
+   AUTH — direct Netlify Identity REST API (no widget)
 ───────────────────────────────────────────────────────────────── */
-// If already logged in, skip the login screen automatically
-netlify.identity.on('init', user => { if (user) startDashboard(user); });
+const TOKEN_KEY = 'ced_admin_auth';
 
-netlify.identity.on('login', user => {
-  netlify.identity.close();
-  startDashboard(user);
+// On page load: check for stored session
+window.addEventListener('DOMContentLoaded', () => {
+  const stored = loadStoredAuth();
+  if (stored) startDashboard();
 });
 
-netlify.identity.on('error', err => {
-  const errEl = document.getElementById('login-error');
-  if (errEl) {
+async function doSignIn(e) {
+  e.preventDefault();
+  const email    = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn      = document.getElementById('btn-signin');
+  const errEl    = document.getElementById('login-error');
+
+  btn.disabled = true;
+  btn.textContent = 'Signing in…';
+  errEl.style.display = 'none';
+
+  try {
+    const res = await fetch('/.netlify/identity/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `grant_type=password&username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error_description || data.msg || 'Incorrect email or password.');
+    saveAuth(data);
+    startDashboard();
+  } catch (err) {
+    errEl.textContent = err.message;
     errEl.style.display = 'block';
-    errEl.textContent = 'Login error: ' + (err.message || err);
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
   }
-  document.getElementById('auth-status').textContent = '';
-  document.getElementById('btn-signin').style.display = 'block';
-});
-
-netlify.identity.on('logout', () => {
-  document.getElementById('dashboard').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('auth-status').textContent = 'Use your email and password to sign in.';
-  document.getElementById('btn-signin').style.display = 'block';
-  state.data = {}; state.shas = {};
-});
-
-function doSignIn() {
-  if (typeof netlify === 'undefined' || !netlify.identity) {
-    document.getElementById('login-error').style.display = 'block';
-    document.getElementById('login-error').textContent = 'Login service not ready — please refresh the page and try again.';
-    return;
-  }
-  document.getElementById('login-error').style.display = 'none';
-  netlify.identity.open();
 }
 
-async function startDashboard(user) {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'block';
-  await loadAll();
+function saveAuth(data) {
+  localStorage.setItem(TOKEN_KEY, JSON.stringify({
+    access_token:  data.access_token,
+    refresh_token: data.refresh_token,
+    expiry: Date.now() + (data.expires_in * 1000)
+  }));
+}
+
+function loadStoredAuth() {
+  try {
+    const s = JSON.parse(localStorage.getItem(TOKEN_KEY));
+    return (s && s.access_token) ? s : null;
+  } catch { return null; }
 }
 
 async function getToken() {
-  const u = netlify.identity.currentUser();
-  if (!u) throw new Error('Not signed in');
-  return u.jwt();
+  let s = loadStoredAuth();
+  if (!s) throw new Error('Not signed in');
+  // Refresh if expiring within 2 minutes
+  if (Date.now() > s.expiry - 120000) {
+    const res = await fetch('/.netlify/identity/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(s.refresh_token)}`
+    });
+    if (!res.ok) { doLogout(); throw new Error('Session expired — please sign in again.'); }
+    const data = await res.json();
+    saveAuth(data);
+    s = data;
+  }
+  return s.access_token;
+}
+
+function doLogout() {
+  localStorage.removeItem(TOKEN_KEY);
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-password').value = '';
+  document.getElementById('btn-signin').disabled = false;
+  document.getElementById('btn-signin').textContent = 'Sign In';
+  state.data = {}; state.shas = {};
+}
+
+function startDashboard() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  loadAll();
 }
 
 /* ─────────────────────────────────────────────────────────────────
