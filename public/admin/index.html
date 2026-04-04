@@ -375,8 +375,7 @@
   <div class="login-card">
     <div class="login-logo">Ced<span>Studio</span></div>
     <div class="login-sub">Content Admin Panel</div>
-    <div id="auth-status" style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">Checking your login…</div>
-    <button type="button" class="btn-signin" id="btn-signin" onclick="doSignIn()" style="display:none;">Sign In</button>
+    <button type="button" class="btn-signin" id="btn-signin" onclick="doSignIn()">Sign In</button>
     <div id="login-error" style="display:none;margin-top:14px;padding:12px;background:rgba(239,68,68,.1);border:1px solid var(--danger);border-radius:10px;color:var(--danger);font-size:.83rem;line-height:1.5;"></div>
   </div>
 </div>
@@ -517,26 +516,8 @@ const FILE_MAP = {
 /* ─────────────────────────────────────────────────────────────────
    AUTH
 ───────────────────────────────────────────────────────────────── */
-let authResolved = false;
-
-function showSignIn(msg) {
-  if (authResolved) return;
-  authResolved = true;
-  document.getElementById('auth-status').textContent = msg || 'Use your email and password to sign in.';
-  document.getElementById('btn-signin').style.display = 'block';
-}
-
-netlify.identity.on('init', user => {
-  authResolved = true;
-  if (user) {
-    startDashboard(user);
-  } else {
-    showSignIn('Use your email and password to sign in.');
-  }
-});
-
-// Fallback: if init never fires within 4 seconds, show the button anyway
-setTimeout(() => showSignIn('Use your email and password to sign in.'), 4000);
+// If already logged in, skip the login screen automatically
+netlify.identity.on('init', user => { if (user) startDashboard(user); });
 
 netlify.identity.on('login', user => {
   netlify.identity.close();
