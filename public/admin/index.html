@@ -517,15 +517,26 @@ const FILE_MAP = {
 /* ─────────────────────────────────────────────────────────────────
    AUTH
 ───────────────────────────────────────────────────────────────── */
+let authResolved = false;
+
+function showSignIn(msg) {
+  if (authResolved) return;
+  authResolved = true;
+  document.getElementById('auth-status').textContent = msg || 'Use your email and password to sign in.';
+  document.getElementById('btn-signin').style.display = 'block';
+}
+
 netlify.identity.on('init', user => {
+  authResolved = true;
   if (user) {
     startDashboard(user);
   } else {
-    // Not logged in — show the Sign In button
-    document.getElementById('auth-status').textContent = 'Use your email and password to sign in.';
-    document.getElementById('btn-signin').style.display = 'block';
+    showSignIn('Use your email and password to sign in.');
   }
 });
+
+// Fallback: if init never fires within 4 seconds, show the button anyway
+setTimeout(() => showSignIn('Use your email and password to sign in.'), 4000);
 
 netlify.identity.on('login', user => {
   netlify.identity.close();
