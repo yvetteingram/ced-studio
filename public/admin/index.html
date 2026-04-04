@@ -375,7 +375,9 @@
   <div class="login-card">
     <div class="login-logo">Ced<span>Studio</span></div>
     <div class="login-sub">Content Admin Panel</div>
-    <button type="button" class="btn-signin" onclick="netlify.identity.open()">Sign In</button>
+    <div id="auth-status" style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">Checking your login…</div>
+    <button type="button" class="btn-signin" id="btn-signin" onclick="doSignIn()" style="display:none;">Sign In</button>
+    <div id="login-error" style="display:none;margin-top:14px;padding:12px;background:rgba(239,68,68,.1);border:1px solid var(--danger);border-radius:10px;color:var(--danger);font-size:.83rem;line-height:1.5;"></div>
   </div>
 </div>
 
@@ -515,13 +517,48 @@ const FILE_MAP = {
 /* ─────────────────────────────────────────────────────────────────
    AUTH
 ───────────────────────────────────────────────────────────────── */
-netlify.identity.on('init', user => { if (user) startDashboard(user); });
-netlify.identity.on('login', user => { netlify.identity.close(); startDashboard(user); });
+netlify.identity.on('init', user => {
+  if (user) {
+    startDashboard(user);
+  } else {
+    // Not logged in — show the Sign In button
+    document.getElementById('auth-status').textContent = 'Use your email and password to sign in.';
+    document.getElementById('btn-signin').style.display = 'block';
+  }
+});
+
+netlify.identity.on('login', user => {
+  netlify.identity.close();
+  startDashboard(user);
+});
+
+netlify.identity.on('error', err => {
+  const errEl = document.getElementById('login-error');
+  if (errEl) {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Login error: ' + (err.message || err);
+  }
+  document.getElementById('auth-status').textContent = '';
+  document.getElementById('btn-signin').style.display = 'block';
+});
+
 netlify.identity.on('logout', () => {
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('auth-status').textContent = 'Use your email and password to sign in.';
+  document.getElementById('btn-signin').style.display = 'block';
   state.data = {}; state.shas = {};
 });
+
+function doSignIn() {
+  if (typeof netlify === 'undefined' || !netlify.identity) {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('login-error').textContent = 'Login service not ready — please refresh the page and try again.';
+    return;
+  }
+  document.getElementById('login-error').style.display = 'none';
+  netlify.identity.open();
+}
 
 async function startDashboard(user) {
   document.getElementById('login-screen').style.display = 'none';
@@ -592,17 +629,49 @@ function showSkeletons() {
 
 async function loadAll() {
   showSkeletons();
+  hideBanner();
   const keys = Object.keys(FILE_MAP);
   const results = await Promise.allSettled(keys.map(k => fetchFile(FILE_MAP[k])));
+  let failCount = 0;
+  let firstError = '';
   results.forEach((r, i) => {
     if (r.status === 'fulfilled') {
       state.data[keys[i]] = r.value.content;
       state.shas[keys[i]] = r.value.sha;
     } else {
+      failCount++;
+      if (!firstError) firstError = r.reason.message || String(r.reason);
       console.error(keys[i], r.reason);
     }
   });
+  if (failCount === keys.length) {
+    // Total failure — likely Git Gateway not enabled
+    showBanner(
+      firstError.includes('404')
+        ? '⚠️ Could not load your content. Make sure <strong>Git Gateway</strong> is enabled in your Netlify dashboard under Identity → Services → Git Gateway, then refresh this page.'
+        : '⚠️ Could not load content: ' + firstError + '. Try logging out and back in.'
+    );
+  } else if (failCount > 0) {
+    showBanner('⚠️ Some content failed to load (' + failCount + ' file' + (failCount > 1 ? 's' : '') + '). Refresh to retry.');
+  }
   renderAll();
+}
+
+function showBanner(html) {
+  let b = document.getElementById('load-banner');
+  if (!b) {
+    b = document.createElement('div');
+    b.id = 'load-banner';
+    b.style.cssText = 'background:rgba(239,68,68,.12);border-bottom:1px solid var(--danger);color:#fca5a5;padding:14px 20px;font-size:.87rem;line-height:1.5;text-align:center;';
+    document.getElementById('dashboard').insertBefore(b, document.querySelector('.tab-bar'));
+  }
+  b.innerHTML = html;
+  b.style.display = 'block';
+}
+
+function hideBanner() {
+  const b = document.getElementById('load-banner');
+  if (b) b.style.display = 'none';
 }
 
 function renderAll() {
